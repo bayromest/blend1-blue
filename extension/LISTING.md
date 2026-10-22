@@ -22,8 +22,9 @@ Every time you save, Blender keeps the previous version as `yourfile.blend1`. On
 backup gets the exact same orange icon as your real file, right next to it, so it's easy to
 open the wrong one and lose work.
 
-**Blend1 Blue gives every backup (`.blend1` up to `.blend32`) the Blender logo in Blender's own
-blue**, so the real file and the backup are instantly told apart.
+**Blend1 Blue gives every backup (`.blend1` up to `.blend32`) the Blender icon in Blender's own
+blue**, so the real file and the backup are instantly told apart. It matches the icon style
+your `.blend` files already use (the bare logo, or the installer's paper-sheet icon).
 
 - Enable the extension and the icons change. Nothing else to do.
 - Double-clicking a backup still opens it in Blender, so recovering after a crash works as before.
@@ -37,7 +38,7 @@ blue**, so the real file and the backup are instantly told apart.
 no background process, and Blender itself is never modified.
 
 Windows only. Not compatible with the Microsoft Store version of Blender, whose sandbox keeps
-registry changes private. A no-Blender installer is also available on the project page.
+registry changes private.
 ```
 
 ## Notes for the moderators

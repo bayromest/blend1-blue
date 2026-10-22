@@ -10,6 +10,7 @@ everything back. Only the current Windows user's file-type settings change
 """
 
 import ctypes
+import hashlib
 import os
 import shutil
 import sys
@@ -23,13 +24,20 @@ PROG_ID = "Blender.BackupFile"
 CLASSES = "Software\\Classes"
 STATE = "Software\\blend1-blue"
 FILE_EXTS = "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts"
-ICON_NAME = "blend1-blue.ico"
+
+# Two styles, matching how .blend files look on this machine: the bare logo
+# (Steam, portable, "Open with" choices) or the paper sheet used by the installer.
+ICONS = {
+    "logo": "blend1-blue.ico",
+    "file": "blend1-blue-file.ico",
+}
 
 # Blender's "Save Versions" preference can keep up to 32 backups.
 EXTENSIONS = [".blend%d" % n for n in range(1, 33)]
 
 SHCNE_ASSOCCHANGED = 0x08000000
 ASSOCSTR_COMMAND = 1
+ASSOCSTR_DEFAULTICON = 15
 
 
 # -----------------------------------------------------------------------------
@@ -77,22 +85,47 @@ def notify_explorer():
 # -----------------------------------------------------------------------------
 # Apply / remove
 
-def icon_path():
-    # The registry needs a path that survives extension updates.
-    directory = bpy.utils.extension_path_user(__package__, path="", create=True)
-    return os.path.join(directory, ICON_NAME)
-
-
-def blend_open_command():
-    """The command Windows uses to open .blend files, so backups open the same way."""
+def assoc_query(what, assoc, verb=None):
     buffer = ctypes.create_unicode_buffer(2048)
     length = ctypes.c_uint(len(buffer))
-    result = ctypes.windll.shlwapi.AssocQueryStringW(
-        0, ASSOCSTR_COMMAND, ".blend", "open", buffer, ctypes.byref(length))
-    command = buffer.value if result == 0 else ""
+    result = ctypes.windll.shlwapi.AssocQueryStringW(0, what, assoc, verb, buffer, ctypes.byref(length))
+    return buffer.value if result == 0 else ""
 
+
+def blend_icon_style(assoc=".blend"):
+    # The installer registers "blender-launcher.exe",1 (the paper sheet); everything
+    # else ends up with the executable's own icon, index 0 (the bare logo).
+    location = assoc_query(ASSOCSTR_DEFAULTICON, assoc)
+    index = location.rsplit(",", 1)[1].strip() if "," in location else "0"
+    return "file" if index == "1" else "logo"
+
+
+def icon_path():
+    """Where the icon is installed. The name carries a hash of its contents,
+    because Windows caches icons by path and would keep showing an old one."""
+    source = os.path.join(os.path.dirname(__file__), ICONS[blend_icon_style()])
+    with open(source, "rb") as fh:
+        digest = hashlib.sha1(fh.read()).hexdigest()[:8]
+    name = "%s-%s.ico" % (os.path.splitext(os.path.basename(source))[0], digest)
+    # The registry needs a path that survives extension updates.
+    directory = bpy.utils.extension_path_user(__package__, path="", create=True)
+    return source, os.path.join(directory, name)
+
+
+def remove_icon_files(keep=None):
+    directory = bpy.utils.extension_path_user(__package__, path="", create=True)
+    for name in os.listdir(directory):
+        path = os.path.join(directory, name)
+        if name.endswith(".ico") and path != keep:
+            os.remove(path)
+
+
+def blend_open_command(assoc=".blend"):
+    """The command Windows uses to open .blend files, so backups open the same way."""
+    command = assoc_query(ASSOCSTR_COMMAND, assoc, "open")
     exe = command.split('"')[1] if command.startswith('"') else command.split(" ")[0]
-    if exe and os.path.isfile(exe):
+    # Without a .blend association Windows answers with its "Open with" picker.
+    if os.path.basename(exe).lower().startswith("blender") and os.path.isfile(exe):
         return command
     return '"%s" "%%1"' % bpy.app.binary_path
 
@@ -101,11 +134,20 @@ def is_applied():
     return read_default(CLASSES + "\\.blend1") == PROG_ID
 
 
+def is_current():
+    icon = icon_path()[1]
+    return (
+        is_applied()
+        and os.path.isfile(icon)
+        and read_default(CLASSES + "\\" + PROG_ID + "\\DefaultIcon") == '"%s",0' % icon
+    )
+
+
 def apply():
-    icon = icon_path()
-    source = os.path.join(os.path.dirname(__file__), ICON_NAME)
-    if not os.path.isfile(icon) or os.path.getsize(icon) != os.path.getsize(source):
+    source, icon = icon_path()
+    if not os.path.isfile(icon):
         shutil.copyfile(source, icon)
+    remove_icon_files(keep=icon)
 
     write_default(CLASSES + "\\" + PROG_ID, "Blender Backup File")
     write_default(CLASSES + "\\" + PROG_ID + "\\DefaultIcon", '"%s",0' % icon)
@@ -154,10 +196,7 @@ def remove():
         previous_key.Close()
     delete_tree(CLASSES + "\\" + PROG_ID)
     delete_tree(STATE)
-
-    icon = icon_path()
-    if os.path.isfile(icon):
-        os.remove(icon)
+    remove_icon_files()
 
     notify_explorer()
 
@@ -204,7 +243,8 @@ def register():
     for cls in classes:
         bpy.utils.register_class(cls)
 
-    if sys.platform == "win32" and not bpy.app.background and not is_applied():
+    # Also catches an icon that changed in an extension update.
+    if sys.platform == "win32" and not bpy.app.background and not is_current():
         try:
             apply()
         except OSError as ex:

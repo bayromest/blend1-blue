@@ -6,7 +6,7 @@
 
 **Give Blender's `.blend1` backup files a blue icon, so you stop opening the backup by accident.**
 
-Windows · Blender extension or one double-click · no admin rights · fully undoable
+A Blender extension for Windows · no admin rights · disable it and everything is back
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="assets/preview-dark.png">
@@ -27,8 +27,11 @@ version. We've all done it.
 
 ## The fix
 
-`blend1-blue` gives every backup (`.blend1` up to `.blend32`) its own icon: the official
-Blender logo, the same one your `.blend` files show, with the orange swapped for **Blender's own logo blue**.
+`blend1-blue` gives every backup (`.blend1` up to `.blend32`) its own icon: the same Blender
+icon your `.blend` files show, with the orange swapped for **Blender's own logo blue**.
+
+It matches your setup automatically: the bare logo if Blender came from Steam, a portable
+zip or an "Open with" choice, or the paper-sheet file icon if you used the official installer.
 
 - Orange `.blend` → your file.
 - Blue `.blend1` → the backup. Leave it alone unless something went wrong.
@@ -37,8 +40,6 @@ Double-clicking a backup still opens it in Blender, so recovering from a crash w
 exactly like before. It just won't happen by accident anymore.
 
 ## Install
-
-### Option A: Blender extension (recommended)
 
 1. Download **`blend1_blue-1.0.0.zip`** from the [latest release](../../releases/latest).
 2. Drag it into Blender, or go to *Edit → Preferences → Get Extensions → ⌄ → Install from Disk*.
@@ -49,21 +50,6 @@ right inside Blender's *Get Extensions*.
 
 **To undo:** disable or uninstall the extension. Closing Blender does *not* remove the icons,
 they stay until you turn the extension off.
-
-### Option B: without Blender
-
-1. Download **`blend1-blue-windows.zip`** from the [latest release](../../releases/latest) and unzip it.
-2. Double-click **`Install.cmd`**.
-
-**To undo:** double-click **`Uninstall.cmd`**.
-
-> [!NOTE]
-> Windows may ask *"Do you want to run this file?"* because it came from the internet.
-> Click **Run**. The scripts are short and readable, take a look at
-> [`scripts/install.ps1`](scripts/install.ps1) first if you like.
-
-Both options do exactly the same thing and can be mixed: undoing with either one cleans up
-after the other.
 
 ## What it actually does
 
@@ -77,13 +63,12 @@ Nothing magic, and nothing outside your own Windows user account:
 | Clears any saved *"Always open with"* choice for backups | it would otherwise override the icon |
 | Remembers anything it replaced | `HKCU\Software\blend1-blue`, used when undoing |
 
-The icon file itself lives in the extension's user folder (Option A) or in
-`%LOCALAPPDATA%\blend1-blue` (Option B). No admin rights, no background process, and Blender
-itself is never modified.
+The icon file itself lives in the extension's user folder. No admin rights, no background
+process, and Blender itself is never modified.
 
 > [!TIP]
 > Installed a **new Blender version** and want backups to open in it? Click
-> *Refresh Icons* in the extension's preferences, or run `Install.cmd` again.
+> *Refresh Icons* in the extension's preferences.
 
 ## The color
 
@@ -96,15 +81,17 @@ unmistakably like Blender, just "the quiet one".
 | Blender orange | `#E87D0D` | ![#E87D0D](https://placehold.co/16x16/E87D0D/E87D0D.png) |
 | Blender blue | `#265787` | ![#265787](https://placehold.co/16x16/265787/265787.png) |
 
-The icon is generated from Blender's own logo icon by [`tools/recolor.py`](tools/recolor.py),
+Both icons are generated from Blender's own icons by [`tools/recolor.py`](tools/recolor.py),
 which replaces only the orange pixels, including their anti-aliased edges, so outlines stay
 perfectly smooth. The white ring and the eye are untouched. Every size from 16 to 256 px is included.
 
-To rebuild it yourself from your Blender install (needs Python with `pillow` and `pefile`):
+To rebuild them yourself from your Blender install (needs Python with `pillow` and `pefile`):
 
 ```bash
 python tools/extract_icon.py "C:\path\to\Blender\blender.exe" 0 blender-logo.ico
 python tools/recolor.py blender-logo.ico icons/blend1-blue.ico
+python tools/extract_icon.py "C:\path\to\Blender\blender-launcher.exe" 1 blender-file.ico
+python tools/recolor.py blender-file.ico icons/blend1-blue-file.ico
 ```
 
 To build the extension zip (validated by Blender's own extension tooling):
@@ -120,16 +107,25 @@ No. File icons belong to Windows, so this only touches Windows' file-type settin
 your user account. Blender itself is never modified.
 
 **Microsoft Store version of Blender?**
-Store apps run in a sandbox that keeps their registry changes private, so the extension
-can't change Explorer's icons from there. Use Option B instead.
+Not supported. Store apps run in a sandbox that keeps their registry changes private, so
+the extension can't change Explorer's icons from there.
+
+**I removed Blender before disabling the extension. How do I undo it?**
+Paste this into a terminal (it only touches your own user account):
+
+```bat
+for /L %i in (1,1,32) do reg delete "HKCU\Software\Classes\.blend%i" /f
+reg delete "HKCU\Software\Classes\Blender.BackupFile" /f
+reg delete "HKCU\Software\blend1-blue" /f
+```
 
 **macOS / Linux?**
 Not yet. On Linux this is doable with a shared-mime-info entry; contributions are very
 welcome.
 
 **My backups are still orange.**
-Click *Refresh Icons* in the extension's preferences (or run `Install.cmd` again) and press <kbd>F5</kbd> in Explorer. If a cached icon still
-sticks, sign out and back in.
+Click *Refresh Icons* in the extension's preferences and press <kbd>F5</kbd> in Explorer.
+If a cached icon still sticks, sign out and back in.
 
 **Can I turn off `.blend1` files completely?**
 Yes, in Blender: *Edit → Preferences → Save & Load → Save Versions = 0*. But backups have

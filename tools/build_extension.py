@@ -1,6 +1,6 @@
 """Build the Blender extension zip for extensions.blender.org.
 
-Copies the icon into the extension package, then runs Blender's own
+Copies the icons into the extension package, then runs Blender's own
 validator and builder.
 
 Usage: python tools/build_extension.py <path-to-blender.exe>
@@ -16,7 +16,8 @@ DIST = ROOT / "dist"
 
 
 def main(blender):
-    shutil.copyfile(ROOT / "icons" / "blend1-blue.ico", SOURCE / "blend1-blue.ico")
+    for icon in ("blend1-blue.ico", "blend1-blue-file.ico"):
+        shutil.copyfile(ROOT / "icons" / icon, SOURCE / icon)
     DIST.mkdir(exist_ok=True)
     for command in (
         ["validate", str(SOURCE)],

@@ -2,4 +2,4 @@ __pycache__/
 *.pyc
 dist/
 # Copied in by tools/build_extension.py
-extension/blend1_blue/blend1-blue.ico
+extension/blend1_blue/*.ico
