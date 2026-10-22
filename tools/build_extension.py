@@ -36,6 +36,7 @@ def main(blender):
         "--html", "--html-template", str(ROOT / "tools" / "repo_template.html"),
     )
     shutil.copyfile(ROOT / "assets" / "preview-dark.png", REPO / "preview.png")
+    shutil.copyfile(ROOT / "icons" / "blend1-blue.png", REPO / "icon.png")
     (REPO / ".nojekyll").touch()
 
 
