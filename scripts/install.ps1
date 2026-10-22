@@ -27,8 +27,15 @@ New-Item -Force -Path "$Classes\$ProgId" -Value 'Blender Backup File' | Out-Null
 New-Item -Force -Path "$Classes\$ProgId\DefaultIcon" -Value "`"$IconDst`",0" | Out-Null
 
 # Double-clicking a backup still opens it in Blender, using the same command as .blend files.
-$BlendProgId = Get-DefaultValue 'Registry::HKEY_CLASSES_ROOT\.blend'
-$OpenCommand = if ($BlendProgId) { Get-DefaultValue "Registry::HKEY_CLASSES_ROOT\$BlendProgId\shell\open\command" }
+# Ask Windows itself, so "Open with" choices (Steam, portable, launcher...) are respected.
+Add-Type -Namespace Win32 -Name Assoc -MemberDefinition @'
+[DllImport("shlwapi.dll", CharSet = CharSet.Unicode)]
+public static extern int AssocQueryString(int flags, int str, string assoc, string extra, System.Text.StringBuilder outBuf, ref uint outLen);
+'@
+$buffer = New-Object System.Text.StringBuilder 2048
+$length = [uint32]2048
+$ASSOCSTR_COMMAND = 1
+$OpenCommand = if ([Win32.Assoc]::AssocQueryString(0, $ASSOCSTR_COMMAND, '.blend', 'open', $buffer, [ref]$length) -eq 0) { $buffer.ToString() }
 if ($OpenCommand) {
     New-Item -Force -Path "$Classes\$ProgId\shell\open\command" -Value $OpenCommand | Out-Null
     Write-Host "Backups will still open with: $OpenCommand"

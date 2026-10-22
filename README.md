@@ -28,7 +28,7 @@ version. We've all done it.
 ## The fix
 
 `blend1-blue` gives every backup (`.blend1` up to `.blend32`) its own icon: the official
-Blender file icon, with the orange swapped for its **exact complementary blue**.
+Blender logo, the same one your `.blend` files show, with the orange swapped for its **exact complementary blue**.
 
 - Orange `.blend` → your file.
 - Blue `.blend1` → the backup. Leave it alone unless something went wrong.
@@ -83,15 +83,15 @@ saturation and lightness) is **`#0D78E8`**.
 | Blender orange | `#E87D0D` | ![#E87D0D](https://placehold.co/16x16/E87D0D/E87D0D.png) |
 | Complementary blue | `#0D78E8` | ![#0D78E8](https://placehold.co/16x16/0D78E8/0D78E8.png) |
 
-The icon is generated from Blender's own file icon by [`tools/recolor.py`](tools/recolor.py),
+The icon is generated from Blender's own logo icon by [`tools/recolor.py`](tools/recolor.py),
 which rotates the hue of only the orange pixels. Edges stay perfectly smooth and the white
 ring and dark-blue eye are untouched. Every size from 16 to 256 px is included.
 
 To rebuild it yourself from your Blender install (needs Python with `pillow` and `pefile`):
 
 ```bash
-python tools/extract_icon.py "C:\path\to\Blender\blender-launcher.exe" 1 blend-file.ico
-python tools/recolor.py blend-file.ico icons/blend1-blue.ico
+python tools/extract_icon.py "C:\path\to\Blender\blender.exe" 0 blender-logo.ico
+python tools/recolor.py blender-logo.ico icons/blend1-blue.ico
 ```
 
 ## FAQ
@@ -120,6 +120,6 @@ icon idea.
 
 The scripts are [MIT](LICENSE).
 
-The icon is derived from Blender's file icon. Blender and the Blender logo are trademarks of
+The icon is derived from Blender's logo icon. Blender and the Blender logo are trademarks of
 the [Blender Foundation](https://www.blender.org/about/logo/). This is an independent
 community project, not affiliated with or endorsed by the Blender Foundation.
