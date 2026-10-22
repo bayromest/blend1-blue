@@ -4,11 +4,25 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Blend1 Blue</title>
+  <meta name="description" content="Blender's .blend1 backup files get a blue Blender icon on Windows, so you stop opening the backup by accident.">
+  <meta property="og:title" content="Blend1 Blue">
+  <meta property="og:description" content="Orange is your file, blue is the backup. A tiny Blender extension for Windows.">
+  <meta property="og:image" content="https://bayromest.github.io/blend1-blue/preview.png">
   <style>
     /* Same #202020 as the preview image, so it blends into the page. */
-    :root { color-scheme: dark; --bg: #202020; --fg: #ececec; --muted: #a0a0a0; --card: #2c2c2c; --accent: #6d9fd6; }
+    :root { color-scheme: dark; --bg: #202020; --fg: #ececec; --muted: #a0a0a0; --card: #2c2c2c; --line: #3a3a3a; --accent: #6d9fd6; }
     body { margin: 0; background: var(--bg); color: var(--fg); font: 16px/1.6 system-ui, "Segoe UI", sans-serif; }
-    main { max-width: 760px; margin: 0 auto; padding: 48px 16px; }
+    main { max-width: 760px; margin: 0 auto; padding: 24px 16px 48px; }
+    header { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 40px; }
+    .brand { font-weight: 600; color: var(--muted); }
+    .chips { display: flex; gap: 8px; }
+    .chip { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border: 1px solid var(--line);
+            border-radius: 6px; background: var(--card); color: var(--fg); text-decoration: none; font-size: 0.85rem; line-height: 1.5; }
+    .chip:hover { border-color: var(--muted); }
+    .chip svg { width: 16px; height: 16px; fill: currentColor; }
+    .chip img { width: 18px; height: 18px; border-radius: 50%; }
+    .count { padding-left: 8px; margin-left: 2px; border-left: 1px solid var(--line); color: var(--muted); }
+    .count:empty { display: none; }
     h1 { margin: 0 0 4px; font-size: 2rem; }
     p.lead { margin: 0 0 32px; color: var(--muted); }
     img.preview { width: 100%; border-radius: 12px; margin-bottom: 32px; }
@@ -16,14 +30,34 @@
     code { background: var(--card); padding: 2px 6px; border-radius: 6px; word-break: break-all; }
     ol { padding-left: 20px; }
     a { color: var(--accent); }
-    .listing { margin-top: 40px; overflow-x: auto; font-size: 0.9rem; }
+    .copy { display: flex; align-items: center; gap: 8px; margin: 6px 0; }
+    .copy code { flex: 1; padding: 6px 10px; }
+    .copy button { font: inherit; font-size: 0.85rem; padding: 4px 12px; border-radius: 6px; cursor: pointer;
+                   border: 1px solid var(--line); background: var(--card); color: var(--fg); }
+    .copy button:hover { border-color: var(--muted); }
+    .listing { margin-top: 24px; overflow-x: auto; font-size: 0.9rem; }
     .listing table { border-collapse: collapse; width: 100%; }
     .listing th, .listing td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--card); }
+    .author { display: flex; gap: 16px; align-items: center; margin-top: 48px; padding: 20px; border: 1px solid var(--line); border-radius: 12px; }
+    .author > img { width: 56px; height: 56px; border-radius: 50%; flex: none; }
+    .author p { margin: 0 0 8px; }
+    .author .chips { flex-wrap: wrap; }
     footer { margin-top: 32px; color: var(--muted); font-size: 0.85rem; }
   </style>
 </head>
 <body>
 <main>
+  <header>
+    <span class="brand">Blend1 Blue</span>
+    <!-- Same look as GitHub's own buttons, so the counts read as part of the project. -->
+    <div class="chips">
+      <a class="chip" href="https://github.com/bayromest/blend1-blue">
+        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"/></svg>
+        Star <span class="count" data-stars></span>
+      </a>
+    </div>
+  </header>
+
   <h1>Blend1 Blue</h1>
   <p class="lead">Blender's <code>.blend1</code> backup files get a blue Blender icon on Windows,
     so you stop opening the backup by accident.</p>
@@ -34,7 +68,12 @@
   <ol>
     <li>In Blender, open <em>Edit → Preferences → Get Extensions</em>.</li>
     <li>Open <em>Repositories</em> (top right), click <em>+</em>, then <em>Add Remote Repository</em>.</li>
-    <li>Paste <code>https://bayromest.github.io/blend1-blue/index.json</code> and click <em>Create</em>.</li>
+    <li>Paste this URL and click <em>Create</em>:
+      <div class="copy">
+        <code id="repo-url">https://bayromest.github.io/blend1-blue/index.json</code>
+        <button type="button" id="copy">Copy</button>
+      </div>
+    </li>
     <li>Search for <strong>Blend1 Blue</strong> and click <em>Install</em>.</li>
   </ol>
 
@@ -68,11 +107,55 @@
 </table>
 </div>
 
+  <section class="author">
+    <img src="https://github.com/bayromest.png?size=112" alt="" width="56" height="56">
+    <div>
+      <p>Made by <strong>Bayrem</strong>, a Blender user who opened the wrong file one too many times.
+        macOS and Linux support, new releases and other small Blender tools land on GitHub first.</p>
+      <div class="chips">
+        <a class="chip" href="https://github.com/bayromest">
+          <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"/></svg>
+          Follow @bayromest <span class="count" data-followers></span>
+        </a>
+        <a class="chip" href="https://github.com/bayromest/blend1-blue">
+          <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"/></svg>
+          Star <span class="count" data-stars></span>
+        </a>
+      </div>
+    </div>
+  </section>
+
   <footer>
     <p>To undo, disable or uninstall the extension. Source, details and FAQ on
       <a href="https://github.com/bayromest/blend1-blue">GitHub</a>.
-      Not affiliated with or endorsed by the Blender Foundation. Updated 2026-10-22, 15:31.</p>
+      Not affiliated with or endorsed by the Blender Foundation. Updated 2026-10-22, 16:41.</p>
   </footer>
 </main>
+<script>
+  // Live counts from GitHub; the buttons still work if this fails.
+  // Blender's generator treats dollar signs as placeholders: no template
+  // literals here, and a literal dollar is written as two.
+  function fill(selector, value) {
+    if (typeof value !== "number") return;
+    var text = value >= 1000 ? (value / 1000).toFixed(1).replace(/\.0$/, "") + "k" : String(value);
+    document.querySelectorAll(selector).forEach(function (el) { el.textContent = text; });
+  }
+  fetch("https://api.github.com/repos/bayromest/blend1-blue")
+    .then(function (r) { return r.json(); })
+    .then(function (d) { fill("[data-stars]", d.stargazers_count); })
+    .catch(function () {});
+  fetch("https://api.github.com/users/bayromest")
+    .then(function (r) { return r.json(); })
+    .then(function (d) { fill("[data-followers]", d.followers); })
+    .catch(function () {});
+
+  document.getElementById("copy").addEventListener("click", function () {
+    var button = this;
+    navigator.clipboard.writeText(document.getElementById("repo-url").textContent).then(function () {
+      button.textContent = "Copied";
+      setTimeout(function () { button.textContent = "Copy"; }, 1500);
+    });
+  });
+</script>
 </body>
 </html>

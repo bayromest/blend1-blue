@@ -8,6 +8,11 @@
 
 A Blender extension for Windows · no admin rights · disable it and everything is back
 
+[![Stars](https://img.shields.io/github/stars/bayromest/blend1-blue?style=flat&logo=github&color=265787)](https://github.com/bayromest/blend1-blue/stargazers)
+[![Release](https://img.shields.io/github/v/release/bayromest/blend1-blue?color=265787)](https://github.com/bayromest/blend1-blue/releases/latest)
+[![Blender](https://img.shields.io/badge/Blender-4.2%2B-265787?logo=blender&logoColor=white)](https://bayromest.github.io/blend1-blue/)
+[![Follow](https://img.shields.io/github/followers/bayromest?label=Follow&style=flat&logo=github&color=265787)](https://github.com/bayromest)
+
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="assets/preview-dark.png">
   <img src="assets/preview-light.png" width="600" alt="scene.blend with the normal orange icon next to scene.blend1 and scene.blend2 with a blue icon">
