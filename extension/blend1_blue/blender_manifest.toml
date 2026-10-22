@@ -1,0 +1,22 @@
+schema_version = "1.0.0"
+
+id = "blend1_blue"
+version = "1.0.0"
+name = "Blend1 Blue"
+tagline = "Blue icons for .blend1 backups so you never open them by mistake"
+maintainer = "Bayrem"
+type = "add-on"
+
+website = "https://github.com/bayromest/blend1-blue"
+
+tags = ["System"]
+
+blender_version_min = "4.2.0"
+
+license = ["SPDX:GPL-3.0-or-later"]
+copyright = ["2026 Bayrem"]
+
+platforms = ["windows-x64", "windows-arm64"]
+
+[permissions]
+files = "Set the Windows file icon for Blender backup files"

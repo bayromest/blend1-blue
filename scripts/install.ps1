@@ -55,10 +55,12 @@ foreach ($ext in $Extensions) {
     Set-Item -LiteralPath $key -Value $ProgId
 
     # A saved "Always open with" choice overrides the icon, so clear it.
-    $choice = "$FileExts\$ext\UserChoice"
-    if (Test-Path -LiteralPath $choice) {
-        Remove-Item -LiteralPath $choice -Recurse -Force
-        Write-Host "Cleared saved 'Open with' choice for $ext"
+    foreach ($name in 'UserChoice', 'UserChoiceLatest') {
+        $choice = "$FileExts\$ext\$name"
+        if (Test-Path -LiteralPath $choice) {
+            Remove-Item -LiteralPath $choice -Recurse -Force
+            Write-Host "Cleared saved 'Open with' choice for $ext"
+        }
     }
 }
 
