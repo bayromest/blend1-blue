@@ -13,8 +13,9 @@
     :root { color-scheme: dark; --bg: #202020; --fg: #ececec; --muted: #a0a0a0; --card: #2c2c2c; --line: #3a3a3a; --accent: #6d9fd6; }
     body { margin: 0; background: var(--bg); color: var(--fg); font: 16px/1.6 system-ui, "Segoe UI", sans-serif; }
     main { max-width: 760px; margin: 0 auto; padding: 24px 16px 48px; }
-    header { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 40px; }
-    .brand { display: block; }
+    header { display: flex; align-items: center; justify-content: space-between; gap: 12px 16px; flex-wrap: wrap; margin-bottom: 8px; }
+    .title { display: flex; align-items: center; gap: 12px; }
+    .title img { width: 40px; height: 40px; flex: none; }
     .chips { display: flex; gap: 8px; }
     .chip { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border: 1px solid var(--line);
             border-radius: 6px; background: var(--card); color: var(--fg); text-decoration: none; font-size: 0.85rem; line-height: 1.5; }
@@ -23,7 +24,7 @@
     .chip img { width: 18px; height: 18px; border-radius: 50%; }
     .count { padding-left: 8px; margin-left: 2px; border-left: 1px solid var(--line); color: var(--muted); }
     .count:empty { display: none; }
-    h1 { margin: 0 0 4px; font-size: 2rem; }
+    h1 { margin: 0; font-size: 2rem; line-height: 1.2; }
     p.lead { margin: 0 0 32px; color: var(--muted); }
     img.preview { width: 100%; border-radius: 12px; margin-bottom: 32px; }
     h2 { font-size: 1.15rem; margin: 32px 0 8px; }
@@ -39,12 +40,22 @@
     .listing table { border-collapse: collapse; width: 100%; }
     .listing th, .listing td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--card); }
     footer { margin-top: 32px; color: var(--muted); font-size: 0.85rem; }
+    @media (max-width: 480px) {
+      main { padding-top: 20px; }
+      h1 { font-size: 1.6rem; }
+      .title img { width: 32px; height: 32px; }
+      .copy { flex-wrap: wrap; }
+      .copy code { flex-basis: 100%; }
+    }
   </style>
 </head>
 <body>
 <main>
   <header>
-    <img class="brand" src="icon.png" alt="" width="32" height="32">
+    <div class="title">
+      <img src="icon.png" alt="" width="40" height="40">
+      <h1>Blend1 Blue</h1>
+    </div>
     <!-- Same look as GitHub's own buttons, so the counts read as part of the project. -->
     <div class="chips">
       <a class="chip" href="https://github.com/bayromest">
@@ -58,7 +69,6 @@
     </div>
   </header>
 
-  <h1>Blend1 Blue</h1>
   <p class="lead">Blender's <code>.blend1</code> backup files get a blue Blender icon on Windows,
     so you stop opening the backup by accident.</p>
 
