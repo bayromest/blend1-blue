@@ -1,9 +1,9 @@
-"""Recolor the Blender orange in an .ico to its exact complementary blue.
+"""Recolor the Blender orange in an .ico to Blender's own logo blue.
 
-Every orange-hued pixel is rotated 180 degrees in hue while keeping its
-lightness and saturation, which in RGB is simply (max + min) - channel.
-Blender orange #E87D0D therefore becomes #0D78E8, and the anti-aliased
-edges (orange blended with white or transparency) stay perfectly smooth.
+Blender orange #E87D0D becomes #265787, the dark blue of the logo's eye.
+Anti-aliased edges are orange blended with white, so each orange-hued pixel
+is unmixed into (amount of orange, amount of white) and remixed with the
+blue instead. Edges stay perfectly smooth; transparency is untouched.
 
 Usage: python tools/recolor.py <in.ico> <out.ico>
 """
@@ -13,16 +13,19 @@ import sys
 from PIL import Image
 
 SIZES = [256, 128, 96, 64, 48, 32, 24, 16]
+ORANGE = (0xE8, 0x7D, 0x0D)
+BLUE = (0x26, 0x57, 0x87)
 
 
 def is_orange(r, g, b):
     h, l, s = colorsys.rgb_to_hls(r / 255, g / 255, b / 255)
-    return s > 0.15 and 0.02 < h < 0.14  # roughly 7-50 degrees
+    return s > 0.03 and 0.02 < h < 0.14  # roughly 7-50 degrees
 
 
-def complement(r, g, b):
-    k = max(r, g, b) + min(r, g, b)
-    return k - r, k - g, k - b
+def to_blue(r, g, b):
+    # The blue channel separates orange (13) from white (255) the most.
+    t = min(max((255 - b) / (255 - ORANGE[2]), 0.0), 1.0)
+    return tuple(round(t * c + (1 - t) * 255) for c in BLUE)
 
 
 def recolor(img):
@@ -32,7 +35,7 @@ def recolor(img):
         for x in range(img.width):
             r, g, b, a = px[x, y]
             if a and is_orange(r, g, b):
-                px[x, y] = (*complement(r, g, b), a)
+                px[x, y] = (*to_blue(r, g, b), a)
     return img
 
 

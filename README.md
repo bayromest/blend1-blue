@@ -28,7 +28,7 @@ version. We've all done it.
 ## The fix
 
 `blend1-blue` gives every backup (`.blend1` up to `.blend32`) its own icon: the official
-Blender logo, the same one your `.blend` files show, with the orange swapped for its **exact complementary blue**.
+Blender logo, the same one your `.blend` files show, with the orange swapped for **Blender's own logo blue**.
 
 - Orange `.blend` → your file.
 - Blue `.blend1` → the backup. Leave it alone unless something went wrong.
@@ -75,17 +75,18 @@ Upgrading or reinstalling Blender doesn't undo it.
 
 ## The color
 
-The Blender logo orange is `#E87D0D`. Its exact complement (hue rotated 180°, same
-saturation and lightness) is **`#0D78E8`**.
+The Blender logo has two colors besides white: the orange `#E87D0D` and the blue of
+its eye, `#265787`. Backups simply use the logo's own blue everywhere, so they still look
+unmistakably like Blender, just "the quiet one".
 
 | | Hex | |
 | --- | --- | --- |
 | Blender orange | `#E87D0D` | ![#E87D0D](https://placehold.co/16x16/E87D0D/E87D0D.png) |
-| Complementary blue | `#0D78E8` | ![#0D78E8](https://placehold.co/16x16/0D78E8/0D78E8.png) |
+| Blender blue | `#265787` | ![#265787](https://placehold.co/16x16/265787/265787.png) |
 
 The icon is generated from Blender's own logo icon by [`tools/recolor.py`](tools/recolor.py),
-which rotates the hue of only the orange pixels. Edges stay perfectly smooth and the white
-ring and dark-blue eye are untouched. Every size from 16 to 256 px is included.
+which replaces only the orange pixels, including their anti-aliased edges, so outlines stay
+perfectly smooth. The white ring and the eye are untouched. Every size from 16 to 256 px is included.
 
 To rebuild it yourself from your Blender install (needs Python with `pillow` and `pefile`):
 
@@ -96,8 +97,9 @@ python tools/recolor.py blender-logo.ico icons/blend1-blue.ico
 
 ## FAQ
 
-**Why not a Blender add-on?**
-File icons belong to Windows, not to Blender. An add-on can't change them.
+**Does it change anything in Blender?**
+No. File icons belong to Windows, so this only touches Windows' file-type settings for
+your user account. Blender itself is never modified.
 
 **macOS / Linux?**
 Not yet. On Linux this is doable with a shared-mime-info entry; contributions are very
