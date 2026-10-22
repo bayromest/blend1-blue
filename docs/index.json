@@ -1,0 +1,36 @@
+{
+  "version": "v1",
+  "blocklist": [],
+  "data": [
+    {
+      "schema_version": "1.0.0",
+      "id": "blend1_blue",
+      "name": "Blend1 Blue",
+      "tagline": "Blue icons for .blend1 backups so you never open them by mistake",
+      "version": "1.0.0",
+      "type": "add-on",
+      "maintainer": "Bayrem",
+      "license": [
+        "SPDX:GPL-3.0-or-later"
+      ],
+      "blender_version_min": "4.2.0",
+      "website": "https://github.com/bayromest/blend1-blue",
+      "copyright": [
+        "2026 Bayrem"
+      ],
+      "permissions": {
+        "files": "Set the Windows file icon for Blender backup files"
+      },
+      "tags": [
+        "System"
+      ],
+      "platforms": [
+        "windows-x64",
+        "windows-arm64"
+      ],
+      "archive_url": "./blend1_blue-1.0.0.zip",
+      "archive_size": 50103,
+      "archive_hash": "sha256:bed9802588f4282aea75d2e2d0d2a12cb45472e04a6583bcacee3b7a70596e06"
+    }
+  ]
+}

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Blend1 Blue</title>
+  <style>
+    :root { --bg: #ffffff; --fg: #1f1f1f; --muted: #5f5f5f; --card: #f3f4f6; --accent: #265787; }
+    @media (prefers-color-scheme: dark) {
+      :root { --bg: #1e1e20; --fg: #ececec; --muted: #a0a0a5; --card: #2a2a2e; --accent: #6d9fd6; }
+    }
+    body { margin: 0; background: var(--bg); color: var(--fg); font: 16px/1.6 system-ui, "Segoe UI", sans-serif; }
+    main { max-width: 760px; margin: 0 auto; padding: 48px 16px; }
+    h1 { margin: 0 0 4px; font-size: 2rem; }
+    p.lead { margin: 0 0 32px; color: var(--muted); }
+    img.preview { width: 100%; border-radius: 12px; margin-bottom: 32px; }
+    h2 { font-size: 1.15rem; margin: 32px 0 8px; }
+    code { background: var(--card); padding: 2px 6px; border-radius: 6px; word-break: break-all; }
+    ol { padding-left: 20px; }
+    a { color: var(--accent); }
+    .listing { margin-top: 40px; overflow-x: auto; font-size: 0.9rem; }
+    .listing table { border-collapse: collapse; width: 100%; }
+    .listing th, .listing td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--card); }
+    footer { margin-top: 32px; color: var(--muted); font-size: 0.85rem; }
+  </style>
+</head>
+<body>
+<main>
+  <h1>Blend1 Blue</h1>
+  <p class="lead">Blender's <code>.blend1</code> backup files get a blue Blender icon on Windows,
+    so you stop opening the backup by accident.</p>
+
+  <img class="preview" src="preview.png" alt="scene.blend with the orange Blender icon next to scene.blend1 and scene.blend2 with a blue one">
+
+  <h2>Install with updates (recommended)</h2>
+  <ol>
+    <li>In Blender, open <em>Edit → Preferences → Get Extensions</em>.</li>
+    <li>Open <em>Repositories</em> (top right), click <em>+</em>, then <em>Add Remote Repository</em>.</li>
+    <li>Paste <code>https://bayromest.github.io/blend1-blue/index.json</code> and click <em>Create</em>.</li>
+    <li>Search for <strong>Blend1 Blue</strong> and click <em>Install</em>.</li>
+  </ol>
+
+  <h2>Or drag and drop</h2>
+  <p>Drag the <strong>blend1_blue</strong> link below into a Blender window. Blender offers to add this
+    repository too, so you still get updates.</p>
+
+  <div class="listing">${body}</div>
+
+  <footer>
+    <p>To undo, disable or uninstall the extension. Source, details and FAQ on
+      <a href="https://github.com/bayromest/blend1-blue">GitHub</a>.
+      Not affiliated with or endorsed by the Blender Foundation. Updated ${date}.</p>
+  </footer>
+</main>
+</body>
+</html>

@@ -41,12 +41,30 @@ exactly like before. It just won't happen by accident anymore.
 
 ## Install
 
-1. Download **`blend1_blue-1.0.0.zip`** from the [latest release](../../releases/latest).
-2. Drag it into Blender, or go to *Edit → Preferences → Get Extensions → ⌄ → Install from Disk*.
-3. That's it. The blue icons apply as soon as the extension is enabled.
+### From Blender, with automatic updates (recommended)
 
-Soon also on [extensions.blender.org](https://extensions.blender.org): search **Blend1 Blue**
-right inside Blender's *Get Extensions*.
+1. In Blender, open *Edit → Preferences → Get Extensions*.
+2. Open *Repositories* (top right), click **+**, then *Add Remote Repository*.
+3. Paste this URL and click *Create*:
+
+   ```text
+   https://bayromest.github.io/blend1-blue/index.json
+   ```
+
+4. Search for **Blend1 Blue** and click *Install*. The blue icons apply right away.
+
+Blender now checks this repository for updates like any other extension.
+
+### Drag and drop
+
+Open the [Blend1 Blue page](https://bayromest.github.io/blend1-blue/) and drag the
+**blend1_blue** link into a Blender window. Blender installs it and offers to add the
+repository, so you still get updates.
+
+### Offline
+
+Download **`blend1_blue-1.0.0.zip`** from the [latest release](../../releases/latest) and drag
+it into Blender (or *Get Extensions → ⌄ → Install from Disk*). You won't get updates this way.
 
 **To undo:** disable or uninstall the extension. Closing Blender does *not* remove the icons,
 they stay until you turn the extension off.
@@ -94,11 +112,16 @@ python tools/extract_icon.py "C:\path\to\Blender\blender-launcher.exe" 1 blender
 python tools/recolor.py blender-file.ico icons/blend1-blue-file.ico
 ```
 
-To build the extension zip (validated by Blender's own extension tooling):
+To build the extension and regenerate the update repository in [`docs/`](docs) (served by
+GitHub Pages), using Blender's own validator and builder:
 
 ```bash
 python tools/build_extension.py "C:\path\to\Blender\blender.exe"
 ```
+
+To publish a new version: bump `version` in
+[`blender_manifest.toml`](extension/blend1_blue/blender_manifest.toml), run the command above,
+then commit and push. Everyone who added the repository gets the update in Blender.
 
 ## FAQ
 
@@ -138,9 +161,10 @@ icon idea.
 
 ## License
 
-[GPL-3.0-or-later](LICENSE), like Blender itself and as required for extensions on
-extensions.blender.org.
+The code is [GPL-3.0-or-later](LICENSE), like Blender itself.
 
-The icon is derived from Blender's logo icon. Blender and the Blender logo are trademarks of
-the [Blender Foundation](https://www.blender.org/about/logo/). This is an independent
-community project, not affiliated with or endorsed by the Blender Foundation.
+The icons are derived from Blender's own icons and are not covered by that license. Blender
+and the Blender logo are trademarks of the [Blender Foundation](https://www.blender.org/about/logo/).
+This is an independent community project, not affiliated with or endorsed by the Blender
+Foundation. That's also why it isn't on extensions.blender.org, which doesn't allow the Blender
+logo in extensions; it's distributed from its own repository instead.
